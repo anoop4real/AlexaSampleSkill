@@ -9,14 +9,14 @@ app = express();
 let alexaVerifier = require('alexa-verifier');
 
 
-var privateKey = fs.readFileSync('key.pem', 'utf8');
-var certificate = fs.readFileSync('cert.pem', 'utf8');
-
-var credentials = {
-    key: privateKey,
-    cert: certificate,
-    passphrase:'@619'
-};
+// var privateKey = fs.readFileSync('key.pem', 'utf8');
+// var certificate = fs.readFileSync('cert.pem', 'utf8');
+//
+// var credentials = {
+//     key: privateKey,
+//     cert: certificate,
+//     passphrase:'@619'
+// };
 
 var httpServer = http.createServer(app);
 //var httpsServer = https.createServer(credentials, app);
