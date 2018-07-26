@@ -18,7 +18,7 @@ const STOP_MESSAGE = 'Enjoy the day...Goodbye!';
 const MORE_MESSAGE = 'Do you want more?'
 const PAUSE = '<break time="0.3s" />'
 const WHISPER = '<amazon:effect name="whispered"/>'
-
+var isFisrtTime = true
 //=========================================================================================================================================
 //TODO: Replace this data with your own.  You can find translations of this data at http://github.com/alexa/skill-sample-node-js-fact/data
 //=========================================================================================================================================
@@ -74,6 +74,7 @@ function requestVerifier(req, res, next) {
 app.post('/marvelheroes', requestVerifier, function(req, res) {
   if (req.body.request.type === 'LaunchRequest') {
     res.json(getNewHero());
+    isFisrtTime = false
   }
   else if (req.body.request.type === 'SessionEndedRequest') { /* ... */ }
   else if (req.body.request.type === 'IntentRequest'){
@@ -119,7 +120,11 @@ app.post('/marvelheroes', requestVerifier, function(req, res) {
 
 function getNewHero(){
 
-  const welcomeSpeechOutput = 'Welcom to marvel heroes<break time="0.3s" />'
+  var welcomeSpeechOutput = 'Welcom to marvel heroes<break time="0.3s" />'
+  if (!isFisrtTime){
+    welcomeSpeechOutput = '';
+  }
+
   const heroArr = data;
   const heroIndex = Math.floor(Math.random() * heroArr.length);
   const randomHero = heroArr[heroIndex];
