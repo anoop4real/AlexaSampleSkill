@@ -1,11 +1,10 @@
-
-var fs              = require('fs');
-var https           = require('https');
-var http           = require('http');
+var fs = require('fs');
+var https = require('https');
+var http = require('http');
 let express = require('express'),
-bodyParser = require('body-parser'),
-port = process.env.PORT || 3000,
-app = express();
+  bodyParser = require('body-parser'),
+  port = process.env.PORT || 3000,
+  app = express();
 let alexaVerifier = require('alexa-verifier');
 
 const APP_ID = 'amzn1.ask.skill.2b2693e0-b306-49b4-aaae-fa68bd270ce4';
@@ -57,6 +56,7 @@ app.use(bodyParser.json({
     req.rawBody = buf.toString();
   }
 }));
+
 function requestVerifier(req, res, next) {
   alexaVerifier(
     req.headers.signaturecertchainurl,
@@ -64,7 +64,10 @@ function requestVerifier(req, res, next) {
     req.rawBody,
     function verificationCallback(err) {
       if (err) {
-        res.status(401).json({ message: 'Verification Failure', error: err });
+        res.status(401).json({
+          message: 'Verification Failure',
+          error: err
+        });
       } else {
         next();
       }
@@ -75,20 +78,18 @@ app.post('/marvelheroes', requestVerifier, function(req, res) {
   if (req.body.request.type === 'LaunchRequest') {
     res.json(getNewHero());
     isFisrtTime = false
-  }
-  else if (req.body.request.type === 'SessionEndedRequest') { /* ... */ }
-  else if (req.body.request.type === 'IntentRequest'){
+  } else if (req.body.request.type === 'SessionEndedRequest') { /* ... */ } else if (req.body.request.type === 'IntentRequest') {
 
     switch (req.body.request.intent.name) {
       case 'AMAZON.YesIntent':
-      res.json(getNewHero());
-      break;
+        res.json(getNewHero());
+        break;
       case 'AMAZON.NoIntent':
-      res.json(stopAndExit());
-      break;
+        res.json(stopAndExit());
+        break;
       case 'AMAZON.HelpIntent':
-      res.json(help());
-      break;
+        res.json(help());
+        break;
       default:
 
     }
@@ -118,10 +119,10 @@ app.post('/marvelheroes', requestVerifier, function(req, res) {
   //   }
 });
 
-function getNewHero(){
+function getNewHero() {
 
   var welcomeSpeechOutput = 'Welcom to marvel heroes<break time="0.3s" />'
-  if (!isFisrtTime){
+  if (!isFisrtTime) {
     welcomeSpeechOutput = '';
   }
 
@@ -160,7 +161,7 @@ function getNewHero(){
 
 }
 
-function stopAndExit(){
+function stopAndExit() {
 
   const speechOutput = "<speak>" + STOP_MESSAGE + "</speak>"
   var jsonObj = {
@@ -177,7 +178,7 @@ function stopAndExit(){
   return jsonObj;
 }
 
-function help(){
+function help() {
 
   const speechOutput = "<speak>" + HELP_MESSAGE + "</speak>"
   const reprompt = "<speak>" + HELP_REPROMPT + "</speak>"
