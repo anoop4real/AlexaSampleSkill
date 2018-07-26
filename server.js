@@ -23,19 +23,19 @@ const WHISPER = '<amazon:effect name="whispered"/>'
 //TODO: Replace this data with your own.  You can find translations of this data at http://github.com/alexa/skill-sample-node-js-fact/data
 //=========================================================================================================================================
 const data = [
-    'Black Panther  ',
-    'She-Hulk ',
-    'Thor',
-    'Nova ',
-    'Doctor Strange ',
-    'Hawkeye',
-    'Quicksilver ',
-    'Blade',
-    'Black Widow',
-    'Captain Marvel',
-    'Deadpool',
-    'Elektra',
-    'Shaktimaan',
+  'Black Panther  ',
+  'She-Hulk ',
+  'Thor',
+  'Nova ',
+  'Doctor Strange ',
+  'Hawkeye',
+  'Quicksilver ',
+  'Blade',
+  'Black Widow',
+  'Captain Marvel',
+  'Deadpool',
+  'Elektra',
+  'Shaktimaan',
 ];
 
 // var privateKey = fs.readFileSync('key.pem', 'utf8');
@@ -102,30 +102,43 @@ app.post('/marvelheroes', requestVerifier, function(req, res) {
     }
   });
 
-function getNewHero(){
+  function getNewHero(){
 
-    const welcomeSpeechOutput = 'Welcom to marvel heroes, here is your hero<break time="0.3s" />'
+    const welcomeSpeechOutput = 'Welcom to marvel heroes<break time="0.3s" />'
     const heroArr = data;
-const heroIndex = Math.floor(Math.random() * heroArr.length);
-const randomHero = heroArr[heroIndex];
-const tempOutput = WHISPER + GET_HERO_MESSAGE + randomHero + PAUSE;
-const speechOutput = "<speak>" + welcomeSpeechOutput + tempOutput + MORE_MESSAGE + "</speak>"
-const more = MORE_MESSAGE
+    const heroIndex = Math.floor(Math.random() * heroArr.length);
+    const randomHero = heroArr[heroIndex];
+    const tempOutput = WHISPER + GET_HERO_MESSAGE + randomHero + PAUSE;
+    const speechOutput = "<speak>" + welcomeSpeechOutput + tempOutput + MORE_MESSAGE + "</speak>"
+    const more = "<speak>" + MORE_MESSAGE + "</speak>"
 
-var jsonObj = {
-  "version": "1.0",
-  "response": {
-    "shouldEndSession": true,
-    "outputSpeech": {
-      "type": "SSML",
-      "ssml": speechOutput
+    var jsonObj = {
+      "version": "1.0",
+      "response": {
+        "shouldEndSession": false,
+        "outputSpeech": {
+          "type": "SSML",
+          "ssml": speechOutput
+        }
+      },
+      "card": {
+        "type": "Simple",
+        "title": SKILL_NAME,
+        "content": randomHero,
+        "text": randomHero
+      },
+      "reprompt": {
+        "outputSpeech": {
+          "type": "PlainText",
+          "text": more,
+          "ssml": more
+        }
+      },
     }
+
+    return jsonObj;
+
   }
-}
-
-return jsonObj;
-
-}
   //httpServer.listen(port);
   //httpsServer.listen(7000);
   app.listen(port);
