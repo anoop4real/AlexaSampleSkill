@@ -76,70 +76,127 @@ app.post('/marvelheroes', requestVerifier, function(req, res) {
     res.json(getNewHero());
   }
   else if (req.body.request.type === 'SessionEndedRequest') { /* ... */ }
-  else if (req.body.request.type === 'IntentRequest' &&
-  req.body.request.intent.name === 'Forecast') {
+  else if (req.body.request.type === 'IntentRequest'){
 
-    if (!req.body.request.intent.slots.Day ||
-      !req.body.request.intent.slots.Day.value) {
-        // Handle this error by producing a response like:
-        // "Hmm, what day do you want to know the forecast for?"
-      }
-      let day = new Date(req.body.request.intent.slots.Day.value);
+    switch (req.body.request.intent.name) {
+      case 'AMAZON.YesIntent':
+      res.json(getNewHero());
+      break;
+      case 'AMAZON.NoIntent':
+      res.json(stopAndExit());
+      break;
+      case 'AMAZON.HelpIntent':
+      res.json(help());
+      break;
+      default:
 
-      // Do your business logic to get weather data here!
-      // Then send a JSON response...
-
-      res.json({
-        "version": "1.0",
-        "response": {
-          "shouldEndSession": true,
-          "outputSpeech": {
-            "type": "SSML",
-            "ssml": "<speak>Looks like a great day!</speak>"
-          }
-        }
-      });
     }
-  });
-
-  function getNewHero(){
-
-    const welcomeSpeechOutput = 'Welcom to marvel heroes<break time="0.3s" />'
-    const heroArr = data;
-    const heroIndex = Math.floor(Math.random() * heroArr.length);
-    const randomHero = heroArr[heroIndex];
-    const tempOutput = WHISPER + GET_HERO_MESSAGE + randomHero + PAUSE;
-    const speechOutput = "<speak>" + welcomeSpeechOutput + tempOutput + MORE_MESSAGE + "</speak>"
-    const more = "<speak>" + MORE_MESSAGE + "</speak>"
-
-    var jsonObj = {
-      "version": "1.0",
-      "response": {
-        "shouldEndSession": false,
-        "outputSpeech": {
-          "type": "SSML",
-          "ssml": speechOutput
-        }
-      },
-      "card": {
-        "type": "Simple",
-        "title": SKILL_NAME,
-        "content": randomHero,
-        "text": randomHero
-      },
-      "reprompt": {
-        "outputSpeech": {
-          "type": "PlainText",
-          "text": more,
-          "ssml": more
-        }
-      },
-    }
-
-    return jsonObj;
-
   }
-  //httpServer.listen(port);
-  //httpsServer.listen(7000);
-  app.listen(port);
-  console.log('Alexa list RESTful API server started on: ' + port);
+  // req.body.request.intent.name === 'AMAZON.YesIntent') {
+  //
+  //   if (!req.body.request.intent.slots.Day ||
+  //     !req.body.request.intent.slots.Day.value) {
+  //       // Handle this error by producing a response like:
+  //       // "Hmm, what day do you want to know the forecast for?"
+  //     }
+  //     let day = new Date(req.body.request.intent.slots.Day.value);
+  //
+  //     // Do your business logic to get weather data here!
+  //     // Then send a JSON response...
+  //
+  //     res.json({
+  //       "version": "1.0",
+  //       "response": {
+  //         "shouldEndSession": true,
+  //         "outputSpeech": {
+  //           "type": "SSML",
+  //           "ssml": "<speak>Looks like a great day!</speak>"
+  //         }
+  //       }
+  //     });
+  //   }
+});
+
+function getNewHero(){
+
+  const welcomeSpeechOutput = 'Welcom to marvel heroes<break time="0.3s" />'
+  const heroArr = data;
+  const heroIndex = Math.floor(Math.random() * heroArr.length);
+  const randomHero = heroArr[heroIndex];
+  const tempOutput = WHISPER + GET_HERO_MESSAGE + randomHero + PAUSE;
+  const speechOutput = "<speak>" + welcomeSpeechOutput + tempOutput + MORE_MESSAGE + "</speak>"
+  const more = "<speak>" + MORE_MESSAGE + "</speak>"
+
+  var jsonObj = {
+    "version": "1.0",
+    "response": {
+      "shouldEndSession": false,
+      "outputSpeech": {
+        "type": "SSML",
+        "ssml": speechOutput
+      }
+    },
+    "card": {
+      "type": "Simple",
+      "title": SKILL_NAME,
+      "content": randomHero,
+      "text": randomHero
+    },
+    "reprompt": {
+      "outputSpeech": {
+        "type": "PlainText",
+        "text": more,
+        "ssml": more
+      }
+    },
+  }
+
+  return jsonObj;
+
+}
+
+function stopAndExit(){
+
+  const speechOutput = "<speak>" + STOP_MESSAGE + "</speak>"
+  var jsonObj = {
+    "version": "1.0",
+    "response": {
+      "shouldEndSession": true,
+      "outputSpeech": {
+        "type": "SSML",
+        "ssml": speechOutput
+      }
+    },
+  }
+
+  return jsonObj;
+}
+
+function help(){
+
+  const speechOutput = "<speak>" + HELP_MESSAGE + "</speak>"
+  const reprompt = "<speak>" + HELP_REPROMPT + "</speak>"
+  var jsonObj = {
+    "version": "1.0",
+    "response": {
+      "shouldEndSession": false,
+      "outputSpeech": {
+        "type": "SSML",
+        "ssml": speechOutput
+      }
+    },
+    "reprompt": {
+      "outputSpeech": {
+        "type": "PlainText",
+        "text": reprompt,
+        "ssml": reprompt
+      }
+    },
+  }
+
+  return jsonObj;
+}
+//httpServer.listen(port);
+//httpsServer.listen(7000);
+app.listen(port);
+console.log('Alexa list RESTful API server started on: ' + port);
