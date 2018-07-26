@@ -18,7 +18,7 @@ let alexaVerifier = require('alexa-verifier');
 //     passphrase:'@619'
 // };
 
-var httpServer = http.createServer(app);
+//var httpServer = http.createServer(app);
 //var httpsServer = https.createServer(credentials, app);
 
 
@@ -82,7 +82,7 @@ app.post('/marvelheroes', requestVerifier, function(req, res) {
     }
   });
 
-  httpServer.listen(port);
+  //httpServer.listen(port);
   //httpsServer.listen(7000);
-  //app.listen(port);
+  app.listen(port);
   console.log('Alexa list RESTful API server started on: ' + port);
